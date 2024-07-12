@@ -1,0 +1,41 @@
+#Cloud Build: $BUILD_ID
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: c1-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: c1
+  template:
+    metadata:
+      labels:
+        app: c1
+    spec:
+      volumes:
+        - name: webapp-mount
+          persistentVolumeClaim:
+            claimName: springboot-app-pvc
+      containers:
+      - name: c1
+        image: "us-central1-docker.pkg.dev/app1-417719/dock/image1"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6000
+          name: service1
+        volumeMounts:
+          - mountPath: /home/Vishesh_PV_dir
+            name: webapp-mount
+        # readinessProbe:
+        #   httpGet:
+        #     path: /actuator/health
+        #     port: 6000
+        #   initialDelaySeconds: 10
+        #   periodSeconds: 5
+        # livenessProbe:
+        #   httpGet:
+        #     path: /actuator/health
+        #     port: 6000
+        #   initialDelaySeconds: 20
+        #   periodSeconds: 5

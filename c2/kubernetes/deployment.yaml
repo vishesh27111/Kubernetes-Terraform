@@ -1,0 +1,29 @@
+#Cloud Build: $BUILD_ID
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: c2-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: c2
+  template:
+    metadata:
+      labels:
+        app: c2
+    spec:
+      volumes:
+        - name: webapp-mount
+          persistentVolumeClaim:
+            claimName: springboot-app-pvc
+      containers:
+      - name: c2
+        image: "us-central1-docker.pkg.dev/app1-417719/dock/image2"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: service2
+        volumeMounts:
+          - mountPath: /home/Vishesh_PV_dir
+            name: webapp-mount
